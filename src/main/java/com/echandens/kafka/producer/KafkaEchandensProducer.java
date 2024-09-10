@@ -21,8 +21,8 @@ public class KafkaEchandensProducer {
     private KafkaTemplate<String, Student> kafkaTemplate;
 
     public void sendStudent(Student student) {
-        log.info("transfert objet studend firstname {} lastname {}", student.getFirstName(),
-                student.getLastName());
+        log.info("transfert objet student firstname {} lastname {} inputTopic {} , outputTopic {}", student.getFirstName(),
+                student.getLastName(), inputTopic, outputTopic);
         kafkaTemplate.send(inputTopic, student);
         log.info( " transfert effectué ");
     }
