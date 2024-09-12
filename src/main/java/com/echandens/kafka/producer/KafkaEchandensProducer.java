@@ -6,7 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @AllArgsConstructor
@@ -23,7 +27,15 @@ public class KafkaEchandensProducer {
     public void sendStudent(Student student) {
         log.info("transfert objet student firstname {} lastname {} inputTopic {} , outputTopic {}", student.getFirstName(),
                 student.getLastName(), inputTopic, outputTopic);
-        kafkaTemplate.send(inputTopic, student);
+       CompletableFuture<SendResult<String , Student>> future = kafkaTemplate.send(inputTopic, UUID.randomUUID().toString(), student);
+
+       future.whenComplete((result , exception ) -> {
+           if(exception != null) {
+               log.error("send student failed", exception);
+           }else {
+               log.info("send student successful {} {}", result.getRecordMetadata().offset(), result.getRecordMetadata().partition());
+           }
+       });
         log.info( " transfert effectué ");
     }
 

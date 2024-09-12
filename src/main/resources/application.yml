@@ -2,26 +2,29 @@ topic :
   inputTopic : inputTopic
   outputTopic : outputTopic
 
-server :
-  port : 8089
+
 
 spring:
+  application:
+    name :kafka
   kafka:
-    consumer:
-      properties:
-        schema.registry.url: http://localhost:8082
-        specific.avro.reader : true
-        allow.auto.create.topics: false
-        enable.auto.commit: false
-      bootstrap-servers: localhost:9092
-      group-id: student_group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-      interceptor.classes: io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+    bootstrap-servers: "127.0.0.1:9092"
     producer:
+      keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
+      valueSerializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
       properties:
-        schema.registry.url: http://localhost:8082
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-
+        schema:
+          registry:
+            url: "http://127.0.0.1:8081"
+    consumer:
+      group-id: "javatechie-new"
+      keyDeserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      valueDeserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+      autoOffsetReset: "earliest"
+      properties:
+        schema:
+          registry:
+            url: "http://127.0.0.1:8081"
+        specific:
+          avro:
+            reader: "true"
