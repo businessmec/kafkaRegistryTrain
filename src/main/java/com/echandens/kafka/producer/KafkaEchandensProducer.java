@@ -25,6 +25,13 @@ public class KafkaEchandensProducer {
     private KafkaTemplate<String, Student> kafkaTemplate;
 
     public void sendStudent(Student student) {
+        student = Student.newBuilder().
+                setFirstName("Jean").
+                setId(UUID.randomUUID().toString()).
+                setRollNumber(10).
+                setLastName("jouarre").
+                setClassName("installation").
+                build();
         log.info("transfert objet student firstname {} lastname {} inputTopic {} , outputTopic {}", student.getFirstName(),
                 student.getLastName(), inputTopic, outputTopic);
        CompletableFuture<SendResult<String , Student>> future = kafkaTemplate.send(inputTopic, UUID.randomUUID().toString(), student);
